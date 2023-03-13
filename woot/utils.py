@@ -20,18 +20,25 @@ def split_by_uppercase(input_str):
     return "_".join(parts)
 
 
-def update_signature(fields, name, params):
+def update_signature(fields, name, path_params, query_params):
     def decorator(func):
         signs = [
             inspect.Parameter("self", inspect.Parameter.POSITIONAL_ONLY),
         ]
 
         path_docs = []
-        for k in params:
+        for k in path_params:
             x = inspect.Parameter(k, inspect.Parameter.POSITIONAL_OR_KEYWORD)
             x = x.replace(annotation=str)
             signs.append(x)
             path_docs.append(f"{k}: str")
+
+        query_docs = []
+        for k in query_params:
+            x = inspect.Parameter(k, inspect.Parameter.POSITIONAL_OR_KEYWORD)
+            x = x.replace(annotation=str)
+            signs.append(x)
+            query_docs.append(f"{k}: str")
 
         field_docs = []
         for k, v in fields.items():
@@ -42,12 +49,17 @@ def update_signature(fields, name, params):
         func.__signature__ = inspect.Signature(signs)
         # Create a docstring that describes the fields
         p_string = "\n".join(path_docs)
+        q_string = "\n".join(query_docs)
         f_string = "\n".join(field_docs)
         docstring = (
-            f"{name}({', '.join(params + list(fields.keys()))})\n\n"
+            f"{name}({', '.join(path_params + list(query_params.keys()) + list(fields.keys()))})\n\n"
             f"Path parameters:\n"
             f"{'-' * 20}\n"
             f"{p_string}"
+            f"\n\n"
+            f"Query parameters:\n"
+            f"{'-' * 20}\n"
+            f"{q_string}"
             f"\n"
             f"Body schema:\n"
             f"{'-' * 20}\n"

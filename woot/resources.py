@@ -2,10 +2,14 @@
 
 P.S. I'm proud of this one.
 """
+import re
+from httpx import URL
 import functools
 from dataclasses import fields
 from types import MethodType
 from simple_rest_client.resource import Resource, AsyncResource
+from simple_rest_client.exceptions import ActionURLMatchError
+
 
 import woot.actions as a
 from woot.utils import update_signature, extract_path_params
@@ -27,32 +31,59 @@ class WootResource(Resource):
 
     def update_action(self, action_name):
         action_schema = self.actions[action_name].schema_
+        action_query = self.actions[action_name].query
         url_params = extract_path_params(self.actions[action_name].url)
         if action_schema is not None:
             action_schema = action_schema.__dataclass_fields__
         else:
             action_schema = {}
+        if action_query is not None:
+            action_query = action_query.__dataclass_fields__
+        else:
+            action_query = {}
 
         action_method = getattr(self, action_name)
 
-        @update_signature(action_schema, action_name, url_params)
+        @update_signature(action_schema, action_name, url_params, action_query)
         def wrapped_action_method(self, *args, **kwargs):
-            fields = action_schema.keys()
-            body = {k: v for k, v in kwargs.items() if k in fields}
-            params = {k: str(v) for k, v in kwargs.items() if k in url_params}
+            schema_fields = action_schema.keys()
+            query_params = action_query.keys()
+            parts = {k: str(v) for k, v in kwargs.items() if k in url_params}
+            query = {k: v for k, v in kwargs.items() if k in query_params}
+            body = {k: v for k, v in kwargs.items() if k in schema_fields}
             kwargs = {
-                k: v for k, v in kwargs.items() if k not in body and k not in params
+                k: v for k, v in kwargs.items() if k not in body and k not in parts
             }
+            self.actions[action_name].url = URL(
+                self.actions[action_name].url
+            ).with_query_params(**query)
+
             return action_method(
-                *args,
+                *parts.values(),
                 body=body,
-                params=None if not params else params,
+                params=None,
                 headers=None,
                 action_name=action_name,
                 **kwargs,
             )
 
         setattr(self, action_name, MethodType(wrapped_action_method, self))
+
+    def get_action_full_url(self, action_name, *parts):
+        action = self.get_action(action_name)
+        try:
+            url = action["url"]
+            url = re.sub(r"{\w+}", "{}", url).format(*parts)
+        except IndexError:
+            raise ActionURLMatchError('No url match for "{}"'.format(action_name))
+
+        if self.append_slash and not url.endswith("/"):
+            url += "/"
+        if not self.api_root_url.endswith("/"):
+            self.api_root_url += "/"
+        if url.startswith("/"):
+            url = url.replace("/", "", 1)
+        return self.api_root_url + url
 
     def __repr__(self):
         actions = self.actions
