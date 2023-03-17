@@ -1,5 +1,6 @@
 """ Handy utilities for woot. """
 import re
+import pprint
 import functools
 import inspect
 

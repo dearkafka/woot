@@ -3,6 +3,7 @@
 P.S. I'm proud of this one.
 """
 import re
+import pprint
 from httpx import URL
 import functools
 from dataclasses import fields
@@ -91,20 +92,29 @@ class WootResource(Resource):
         max_action_len = max([len(action) for action in self.actions.keys()])
         max_method_len = max([len(action.method) for action in self.actions.values()])
         max_url_len = max([len(action.url) for action in self.actions.values()])
-
-        header = f"{resource_name}\n{'-' * (max_action_len + max_method_len + max_url_len + 7)}\n"
+        header_width = max_action_len + max_method_len + max_url_len + 7
+        header = f"{resource_name}\n{'-' * (header_width)}\n"
         actions_str = ""
 
         for action_name, action in actions.items():
             actions_str += (
-                f"{action_name.capitalize()}:".ljust(max_action_len + 2)
+                f"{action_name}:".ljust(max_action_len + 2)
                 + f"{action.method}".ljust(max_method_len + 2)
                 + f"{action.url}".ljust(max_url_len + 2)
             )
+            indent_const = max_action_len + max_method_len + 4
             if action.query:
-                actions_str += f"\n{' ' * (max_action_len + max_method_len + 6)}Query parameters: {action.query.__annotations__}"
+                if len(action.query.__annotations__) <= 1:
+                    special_indent_q = indent_const + 2
+                else:
+                    special_indent_q = 0
+                actions_str += f"\n{' ' * (indent_const)}Query parameters: \n{' ' * (special_indent_q)}{pprint.pformat(action.query.__annotations__, indent=indent_const + 2, compact=True, width=header_width)}"
             if action.schema_:
-                actions_str += f"\n{' ' * (max_action_len + max_method_len + 6)}Payload schema: {action.schema_.__annotations__}"
+                if len(action.schema_.__annotations__) <= 1:
+                    special_indent_p = indent_const + 2
+                else:
+                    special_indent_p = 0
+                actions_str += f"\n{' ' * (indent_const)}Payload schema: \n{' ' * (special_indent_p)}{pprint.pformat(action.schema_.__annotations__, indent=indent_const + 2, compact=True, width=header_width)}"
             actions_str += "\n\n"
 
         return header + actions_str
