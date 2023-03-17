@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from pydantic.dataclasses import dataclass
+from pydantic.dataclasses import dataclass, Field
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
@@ -771,8 +771,8 @@ class ApiV1AccountsAccountIdInboxesIdSetAgentBotPostRequest:
 
 @dataclass
 class ApiV1AccountsAccountIdInboxMembersInboxIdDeleteRequest:
-    inbox_id: str
     user_ids: List[int]
+    inbox_id: str = Field(alias="inbox_id_")
 
 
 @dataclass

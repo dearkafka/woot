@@ -3,6 +3,7 @@ import re
 import pprint
 import functools
 import inspect
+from pydantic.dataclasses import Field
 
 
 def extract_path_params(path_string):
@@ -29,22 +30,27 @@ def update_signature(fields, name, path_params, query_params):
 
         path_docs = []
         for k in path_params:
-            x = inspect.Parameter(k, inspect.Parameter.POSITIONAL_OR_KEYWORD)
-            x = x.replace(annotation=str)
+            x = inspect.Parameter(
+                k, inspect.Parameter.POSITIONAL_OR_KEYWORD, annotation=str
+            )
             signs.append(x)
             path_docs.append(f"{k}: str")
 
         query_docs = []
         for k in query_params:
-            x = inspect.Parameter(k, inspect.Parameter.POSITIONAL_OR_KEYWORD)
-            x = x.replace(annotation=str)
+            x = inspect.Parameter(
+                k, inspect.Parameter.POSITIONAL_OR_KEYWORD, annotation=str
+            )
             signs.append(x)
             query_docs.append(f"{k}: str")
 
         field_docs = []
         for k, v in fields.items():
-            x = inspect.Parameter(k, inspect.Parameter.POSITIONAL_OR_KEYWORD)
-            x = x.replace(annotation=v.type)
+            if hasattr(v.default, "alias") and v.default.alias:
+                k = v.default.alias
+            x = inspect.Parameter(
+                k, inspect.Parameter.POSITIONAL_OR_KEYWORD, annotation=v.type
+            )
             signs.append(x)
             field_docs.append(f"{k}: {v.type}")
         func.__signature__ = inspect.Signature(signs)
