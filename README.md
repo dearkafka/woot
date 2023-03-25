@@ -72,7 +72,7 @@ This will display a list of available actions, their HTTP methods, and API endpo
 Here's an example demonstrating how to use Woot to list all conversations:
 
 ```
-from woot.api import Chatwoot
+from woot import Chatwoot
 
 chatwoot_url = "https://your-chatwoot-instance.com"
 access_key = "your-access-key"
