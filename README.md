@@ -87,5 +87,3 @@ print(all_conversations)
 
 ## License
 The project is licensed under the Cooperative Non-Violent Public License v7 or later (CNPLv7+) - see the [LICENSE](LICENSE) for details. Built for people, not corporations.
-
-
