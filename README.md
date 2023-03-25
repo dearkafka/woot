@@ -1,5 +1,5 @@
 # woot
-a more complicated but still simple Chatwoot API wrapper for Python.
+Chatwoot API wrapper for Python.
 It provides an easy-to-use interface for interacting with the Chatwoot API, allowing you to perform various actions such as creating, retrieving, updating, and deleting conversations, messages, and more.
 
 ## Installation
