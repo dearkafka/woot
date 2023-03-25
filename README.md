@@ -13,10 +13,10 @@ pip install git+https://github.com/dearkafka/woot
 
 ## Usage
 
-To use Woot, you'll first need to import the `Chatwoot` or `AsyncChatwoot` class from the `woot.api` module:
+To use Woot, you'll first need to import the `Chatwoot` or `AsyncChatwoot` class from the `woot`:
 
 ```
-from woot.api import Chatwoot, AsyncChatwoot
+from woot import Chatwoot, AsyncChatwoot
 ```
 
 Next, create an instance of `Chatwoot` or `AsyncChatwoot` by passing your Chatwoot URL and access key:
