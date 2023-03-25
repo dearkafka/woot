@@ -49,7 +49,9 @@ class _BaseChatwoot:
             actions += f"{name:<{max_len}}"
             actions += f"\n{' ' * (max_len + 1)}"
             for action, details in getattr(getattr(self, name), "actions").items():
-                actions += f"{action.capitalize()}: {details.method} {details.url}\n{' ' * (max_len + 1)}"
+                actions += (
+                    f"{action}: {details.method} {details.url}\n{' ' * (max_len + 1)}"
+                )
             actions += "\n"  # Add blank line after actions for each resource
         return header + actions
 

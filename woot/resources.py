@@ -117,7 +117,7 @@ class WootResource(Resource):
                     special_indent_p = indent_const + 2
                 else:
                     special_indent_p = 0
-                actions_str += f"\n{' ' * (indent_const)}Payload schema: \n{' ' * (special_indent_p)}{pprint.pformat(action.schema_.__annotations__, indent=indent_const + 2, compact=True, width=header_width)}"
+                actions_str += f"\n{' ' * (indent_const)}Body schema: \n{' ' * (special_indent_p)}{pprint.pformat(action.schema_.__annotations__, indent=indent_const + 2, compact=True, width=header_width)}"
             actions_str += "\n\n"
 
         return header + actions_str
