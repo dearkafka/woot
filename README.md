@@ -7,7 +7,7 @@ It provides an easy-to-use interface for interacting with the Chatwoot API, allo
 To install Woot, simply run:
 
 ```
-pip install woot
+pip install git+https://github.com/dearkafka/woot
 ```
 
 ## Usage
