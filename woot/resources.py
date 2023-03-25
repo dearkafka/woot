@@ -5,6 +5,7 @@ P.S. I'm proud of this one.
 import re
 import pprint
 from httpx import URL
+from urllib.parse import unquote
 import functools
 from dataclasses import fields
 from types import MethodType
@@ -53,11 +54,13 @@ class WootResource(Resource):
             query = {k: v for k, v in kwargs.items() if k in query_params}
             body = {k: v for k, v in kwargs.items() if k in schema_fields}
             kwargs = {
-                k: v for k, v in kwargs.items() if k not in body and k not in parts
+                k: v
+                for k, v in kwargs.items()
+                if k not in body and k not in parts and k not in query
             }
-            self.actions[action_name].url = URL(
-                self.actions[action_name].url
-            ).with_query_params(**query)
+            self.actions[action_name].url = unquote(
+                str(URL(self.actions[action_name].url).copy_merge_params(params=query))
+            )
 
             return action_method(
                 *parts.values(),
