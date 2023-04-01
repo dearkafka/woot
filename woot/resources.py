@@ -48,6 +48,9 @@ class WootResource(Resource):
 
         @update_signature(action_schema, action_name, url_params, action_query)
         def wrapped_action_method(self, *args, **kwargs):
+            if len(args) > 0:
+                raise TypeError("Positional arguments are not allowed")
+
             schema_fields = action_schema.keys()
             query_params = action_query.keys()
             parts = {k: str(v) for k, v in kwargs.items() if k in url_params}

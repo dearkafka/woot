@@ -30,17 +30,13 @@ def update_signature(fields, name, path_params, query_params):
 
         path_docs = []
         for k in path_params:
-            x = inspect.Parameter(
-                k, inspect.Parameter.POSITIONAL_OR_KEYWORD, annotation=str
-            )
+            x = inspect.Parameter(k, inspect.Parameter.KEYWORD_ONLY, annotation=str)
             signs.append(x)
             path_docs.append(f"{k}: str")
 
         query_docs = []
         for k in query_params:
-            x = inspect.Parameter(
-                k, inspect.Parameter.POSITIONAL_OR_KEYWORD, annotation=str
-            )
+            x = inspect.Parameter(k, inspect.Parameter.KEYWORD_ONLY, annotation=str)
             signs.append(x)
             query_docs.append(f"{k}: str")
 
@@ -48,9 +44,7 @@ def update_signature(fields, name, path_params, query_params):
         for k, v in fields.items():
             if hasattr(v.default, "alias") and v.default.alias:
                 k = v.default.alias
-            x = inspect.Parameter(
-                k, inspect.Parameter.POSITIONAL_OR_KEYWORD, annotation=v.type
-            )
+            x = inspect.Parameter(k, inspect.Parameter.KEYWORD_ONLY, annotation=v.type)
             signs.append(x)
             field_docs.append(f"{k}: {v.type}")
         func.__signature__ = inspect.Signature(signs)
