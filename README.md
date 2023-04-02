@@ -62,7 +62,7 @@ conversations = chatwoot.conversations
 Each resource has a set of actions that can be performed, such as `list`, `create`, `update`, and `delete`. To perform an action, simply call the corresponding method on the resource:
 
 ```
-all_conversations = conversations.list()
+all_conversations = conversations.list(account_id=1)
 ```
 
 ## API Documentation
@@ -88,7 +88,7 @@ access_key = "your-access-key"
 chatwoot = Chatwoot(chatwoot_url=chatwoot_url, access_key=access_key)
 
 conversations = chatwoot.conversations
-all_conversations = conversations.list()
+all_conversations = conversations.list(account_id=1)
 
 print(all_conversations)
 ```
