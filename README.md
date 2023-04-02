@@ -33,6 +33,14 @@ async_chatwoot = AsyncChatwoot(chatwoot_url="https://your-chatwoot-instance.com"
 
 You can then access the various resources and perform actions on them as attributes of the `Chatwoot` or `AsyncChatwoot` instance.
 
+![Example1](https://i.imgur.com/hOH0e6Q.gif)
+
+You can also see details about specific methods, but remember **woot takes keyword arguments only, no positional allowed**
+
+![Example2](https://i.imgur.com/lIDV1kw.gif)
+
+
+
 ## Resources
 
 Woot provides access to various Chatwoot resources, such as:
