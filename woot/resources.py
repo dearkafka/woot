@@ -126,8 +126,106 @@ class WootResource(Resource):
         return header + actions_str
 
 
-class AsyncWootResource(AsyncResource, WootResource):
-    pass
+class AsyncWootResource(AsyncResource):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for action_name in self.actions.keys():
+            self.update_action(action_name)
+
+    def update_action(self, action_name):
+        action_schema = self.actions[action_name].schema_
+        action_query = self.actions[action_name].query
+        url_params = extract_path_params(self.actions[action_name].url)
+        if action_schema is not None:
+            action_schema = action_schema.__dataclass_fields__
+        else:
+            action_schema = {}
+        if action_query is not None:
+            action_query = action_query.__dataclass_fields__
+        else:
+            action_query = {}
+
+        action_method = getattr(self, action_name)
+
+        @update_signature(action_schema, action_name, url_params, action_query)
+        def wrapped_action_method(self, *args, **kwargs):
+            if len(args) > 0:
+                raise TypeError("Positional arguments are not allowed")
+
+            schema_fields = action_schema.keys()
+            query_params = action_query.keys()
+            parts = {k: str(v) for k, v in kwargs.items() if k in url_params}
+            query = {k: v for k, v in kwargs.items() if k in query_params}
+            body = {k: v for k, v in kwargs.items() if k in schema_fields}
+            kwargs = {
+                k: v
+                for k, v in kwargs.items()
+                if k not in body and k not in parts and k not in query
+            }
+            self.actions[action_name].url = unquote(
+                str(URL(self.actions[action_name].url).copy_merge_params(params=query))
+            )
+
+            return action_method(
+                *parts.values(),
+                body=body,
+                params=None,
+                headers=None,
+                action_name=action_name,
+                **kwargs,
+            )
+
+        setattr(self, action_name, MethodType(wrapped_action_method, self))
+
+    def get_action_full_url(self, action_name, *parts):
+        action = self.get_action(action_name)
+        try:
+            url = action["url"]
+            url = re.sub(r"{\w+}", "{}", url).format(*parts)
+        except IndexError:
+            raise ActionURLMatchError('No url match for "{}"'.format(action_name))
+
+        if self.append_slash and not url.endswith("/"):
+            url += "/"
+        if not self.api_root_url.endswith("/"):
+            self.api_root_url += "/"
+        if url.startswith("/"):
+            url = url.replace("/", "", 1)
+        return self.api_root_url + url
+
+    def __repr__(self):
+        actions = self.actions
+        resource_name = self.__class__.__name__ + " actions:"
+        max_action_len = max([len(action) for action in self.actions.keys()])
+        max_method_len = max([len(action.method) for action in self.actions.values()])
+        max_url_len = max([len(action.url) for action in self.actions.values()])
+        header_width = max_action_len + max_method_len + max_url_len + 7
+        header = f"{resource_name}\n{'-' * (header_width)}\n"
+        actions_str = ""
+
+        for action_name, action in actions.items():
+            actions_str += (
+                f"{action_name}:".ljust(max_action_len + 2)
+                + f"{action.method}".ljust(max_method_len + 2)
+                + f"{action.url}".ljust(max_url_len + 2)
+            )
+            indent_const = max_action_len + max_method_len + 4
+            if action.query:
+                if len(action.query.__annotations__) <= 1:
+                    special_indent_q = indent_const + 2
+                else:
+                    special_indent_q = 0
+                actions_str += f"\n{' ' * (indent_const)}Query parameters: \n{' ' * (special_indent_q)}{pprint.pformat(action.query.__annotations__, indent=indent_const + 2, compact=True, width=header_width)}"
+            if action.schema_:
+                if len(action.schema_.__annotations__) <= 1:
+                    special_indent_p = indent_const + 2
+                else:
+                    special_indent_p = 0
+                actions_str += f"\n{' ' * (indent_const)}Body schema: \n{' ' * (special_indent_p)}{pprint.pformat(action.schema_.__annotations__, indent=indent_const + 2, compact=True, width=header_width)}"
+            actions_str += "\n\n"
+
+        return header + actions_str
 
 
 class AccountResource(WootResource, metaclass=ActionMeta, actions=a.AccountActions):
