@@ -4,12 +4,18 @@ P.S. I'm proud of this one.
 """
 import re
 import pprint
+import httpx
 from httpx import URL
 from urllib.parse import unquote
 import functools
 from dataclasses import fields
 from types import MethodType
-from simple_rest_client.resource import Resource, AsyncResource
+from simple_rest_client.resource import (
+    Resource,
+    BaseResource,
+    make_async_request,
+    Request,
+)
 from simple_rest_client.exceptions import ActionURLMatchError
 
 
@@ -124,6 +130,45 @@ class WootResource(Resource):
             actions_str += "\n\n"
 
         return header + actions_str
+
+
+# unfortunately I need to copy-paste the whole class
+# because I need to re-create httpx client as its closed after each request
+class AsyncResource(BaseResource):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.client = httpx.AsyncClient(verify=self.ssl_verify)
+        for action_name in self.actions.keys():
+            self.add_action(action_name)
+
+    def add_action(self, action_name):
+        async def action_method(
+            self,
+            *args,
+            body=None,
+            params=None,
+            headers=None,
+            action_name=action_name,
+            **kwargs,
+        ):
+            self.client = httpx.AsyncClient(verify=self.ssl_verify)
+            url = self.get_action_full_url(action_name, *args)
+            method = self.get_action_method(action_name)
+            request = Request(
+                url=url,
+                method=method,
+                params=params or {},
+                body=body,
+                headers=headers or {},
+                timeout=self.timeout,
+                kwargs=kwargs,
+            )
+            request.params.update(self.params)
+            request.headers.update(self.headers)
+            async with self.client as client:
+                return await make_async_request(client, request)
+
+        setattr(self, action_name, MethodType(action_method, self))
 
 
 class AsyncWootResource(AsyncResource):
