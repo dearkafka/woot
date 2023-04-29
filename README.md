@@ -3,6 +3,8 @@
 Woot is a simple Chatwoot API wrapper for Python.
 It provides an easy-to-use interface for interacting with the Chatwoot API, allowing you to perform various actions such as creating, retrieving, updating, and deleting conversations, messages, and more.
 
+Also, if you wonder how to use it for Chatwoot webhook have a look at [woothook](https://github.com/dearkafka/woothook)
+
 ## Installation
 
 To install Woot, simply run:
