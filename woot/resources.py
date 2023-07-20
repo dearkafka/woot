@@ -10,14 +10,14 @@ from urllib.parse import unquote
 import functools
 from dataclasses import fields
 from types import MethodType
-from simple_rest_client.resource import (
+from woot.simple_rest_client.resource import (
     Resource,
     BaseResource,
     make_async_request,
     Request,
 )
-from simple_rest_client.exceptions import ActionURLMatchError
-
+from woot.simple_rest_client.exceptions import ActionURLMatchError
+from woot.utils import contains_bytes
 
 import woot.actions as a
 from woot.utils import update_signature, extract_path_params
@@ -163,8 +163,12 @@ class AsyncResource(BaseResource):
                 timeout=self.timeout,
                 kwargs=kwargs,
             )
+            
             request.params.update(self.params)
             request.headers.update(self.headers)
+            if contains_bytes(request.body):
+                add_headers = {"Content-Type": "multipart/form-data"}
+                request.headers.update(add_headers)
             async with self.client as client:
                 return await make_async_request(client, request)
 

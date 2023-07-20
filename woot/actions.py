@@ -375,6 +375,11 @@ class MessagesActions:
         method="DELETE",
         url="api/v1/accounts/{account_id}/conversations/{conversation_id}/messages/{message_id}",
     )
+    create_attachment: Action = Action(
+        method="POST",
+        url="api/v1/accounts/{account_id}/conversations/{conversation_id}/messages",
+        schema_=ws.ConversationMessageAttachmentCreate,
+    )
 
 
 @dataclass

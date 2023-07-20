@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pydantic.dataclasses import dataclass, Field
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 
 @dataclass
@@ -347,6 +347,14 @@ class ConversationMessageCreate:
     private: Optional[bool] = None
     content_type: Optional[ContentType1] = None
     content_attributes: Optional[Dict[str, Any]] = None
+
+
+@dataclass
+class ConversationMessageAttachmentCreate:
+    content: str
+    files: Optional[Dict[str, Union[str, Any]]] = None
+    message_type: Optional[MessageType1] = None
+    file_type: Optional[str] = None
 
 
 @dataclass

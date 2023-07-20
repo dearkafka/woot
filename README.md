@@ -95,6 +95,8 @@ all_conversations = conversations.list(account_id=1)
 print(all_conversations)
 ```
 
+Project is influenced by and borrowed from [simple_rest_client](https://github.com/allisson/python-simple-rest-client) and in fact started by using it as it is, but then I decided to make it more Chatwoot specific and add some features that I needed.
+
 
 ## License
 The project is licensed under the Cooperative Non-Violent Public License v7 or later (CNPLv7+) - see the [LICENSE](LICENSE) for details. Built for people, not corporations.

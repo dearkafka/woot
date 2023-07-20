@@ -6,6 +6,21 @@ import inspect
 from pydantic.dataclasses import Field
 
 
+def contains_bytes(data):
+    if isinstance(data, dict):
+        for value in data.values():
+            if contains_bytes(value):
+                return True
+    elif isinstance(data, (list, tuple)):
+        for item in data:
+            if contains_bytes(item):
+                return True
+    elif isinstance(data, bytes):
+        return True
+
+    return False
+
+
 def extract_path_params(path_string):
     return re.findall(r"\{([^}]*)\}", path_string)
 

@@ -1,7 +1,7 @@
 """ Chatwoot API wrapper is here."""
 
 from abc import abstractproperty
-from simple_rest_client.api import API
+from woot.simple_rest_client.api import API
 
 import woot.resources as wr
 from woot.utils import get_account_name
