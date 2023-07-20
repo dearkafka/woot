@@ -377,6 +377,24 @@ class AutomationRuleResource(
     pass
 
 
+class ClientContactsResource(
+    WootResource, metaclass=ActionMeta, actions=a.ClientContactsActions
+):
+    pass
+
+
+class ClientConversationsResource(
+    WootResource, metaclass=ActionMeta, actions=a.ClientConversationsActions
+):
+    pass
+
+
+class ClientMessagesResource(
+    WootResource, metaclass=ActionMeta, actions=a.ClientMessagesActions
+):
+    pass
+
+
 # Async
 
 
@@ -502,6 +520,24 @@ class AsyncWebhooksResource(
 
 class AsyncAutomationRuleResource(
     AsyncWootResource, metaclass=ActionMeta, actions=a.AutomationRuleActions
+):
+    pass
+
+
+class AsyncClientContactsResource(
+    AsyncWootResource, metaclass=ActionMeta, actions=a.ClientContactsActions
+):
+    pass
+
+
+class AsyncClientConversationsResource(
+    AsyncWootResource, metaclass=ActionMeta, actions=a.ClientConversationsActions
+):
+    pass
+
+
+class AsyncClientMessagesResource(
+    AsyncWootResource, metaclass=ActionMeta, actions=a.ClientMessagesActions
 ):
     pass
 
