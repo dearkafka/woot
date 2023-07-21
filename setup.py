@@ -28,5 +28,5 @@ setup(
     ],
     include_package_data=True,
     python_requires=">=3.6",
-    install_requires=["httpx>=0.23.0", "slugify", "httpx", "pydantic"],
+    install_requires=["httpx>=0.23.0", "slugify", "httpx", "status", "pydantic"],
 )
