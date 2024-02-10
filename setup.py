@@ -33,6 +33,6 @@ setup(
         "python-slugify",
         "httpx",
         "python-status",
-        "pydantic",
+        "pydantic==1.10.13",
     ],
 )
