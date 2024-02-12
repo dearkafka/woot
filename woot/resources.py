@@ -2,13 +2,14 @@
 
 P.S. I'm proud of this one.
 """
+
 import re
 import pprint
 import httpx
 from httpx import URL
 from urllib.parse import unquote
 import functools
-from dataclasses import fields
+from dataclasses import fields, is_dataclass
 from types import MethodType
 from woot.simple_rest_client.resource import (
     Resource,
@@ -25,7 +26,13 @@ from woot.utils import update_signature, extract_path_params
 
 class ActionMeta(type):
     def __new__(cls, name, bases, attrs, actions):
-        attrs["default_actions"] = {v.name: v.default for v in fields(actions)}
+        if is_dataclass(actions):
+            instantiated_actions = actions()
+            attrs["default_actions"] = {
+                v.name: getattr(instantiated_actions, v.name) for v in fields(actions)
+            }
+        else:
+            attrs["default_actions"] = {v.name: v.default for v in fields(actions)}
         new_class = super().__new__(cls, name, bases, attrs)
         return new_class
 
@@ -163,7 +170,7 @@ class AsyncResource(BaseResource):
                 timeout=self.timeout,
                 kwargs=kwargs,
             )
-            
+
             request.params.update(self.params)
             request.headers.update(self.headers)
             if contains_bytes(request.body):
