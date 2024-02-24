@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 
 def long_description():
@@ -8,7 +8,7 @@ def long_description():
 
 setup(
     name="woot",
-    version="0.0.1",
+    version="0.0.2",
     author="Aleksei Ushakov",
     author_email="isfluid@proton.me",
     description="Still simple Chatwoot API wrapper",
