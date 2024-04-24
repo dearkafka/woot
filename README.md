@@ -1,4 +1,4 @@
-![woot](https://socialify.git.ci/dearkafka/woot/image?font=Bitter&logo=data%3Aimage%2Fsvg%2Bxml%3Bcharset%3DUTF-8%2C%253Csvg%2520xmlns%253D%2522http%253A%252F%252Fwww.w3.org%252F2000%252Fsvg%2522%2520viewBox%253D%25220%25200%2520100%2520100%2522%253E%253Ctext%2520y%253D%2522.9em%2522%2520font-size%253D%252290%2522%253E%25F0%259F%25A6%2589%253C%252Ftext%253E%253C%252Fsvg%253E&name=1&pattern=Plus&theme=Auto)
+![woot](https://socialify.git.ci/dearkafka/woot/image?description=1&font=Bitter&logo=https%3A%2F%2Fs3.amazonaws.com%2Fpix.iemoji.com%2Fimages%2Femoji%2Fapple%2Fios-12%2F256%2Fowl.png&name=1&theme=Auto)
 # 
 Woot is a simple Chatwoot API wrapper for Python.
 It provides an easy-to-use interface for interacting with the Chatwoot API, allowing you to perform various actions such as creating, retrieving, updating, and deleting conversations, messages, and more.
