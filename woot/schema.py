@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from pydantic.dataclasses import dataclass, Field
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple, Union
+
+from pydantic.dataclasses import Field, dataclass
 
 
 @dataclass

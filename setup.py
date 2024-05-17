@@ -8,7 +8,7 @@ def long_description():
 
 setup(
     name="woot",
-    version="0.0.2",
+    version="0.1.0",
     author="Aleksei Ushakov",
     author_email="isfluid@proton.me",
     description="Still simple Chatwoot API wrapper",
@@ -31,8 +31,7 @@ setup(
     install_requires=[
         "httpx>=0.23.0",
         "python-slugify",
-        "httpx",
         "python-status",
-        "pydantic==1.10.13",
+        "pydantic",
     ],
 )

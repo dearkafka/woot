@@ -1,9 +1,8 @@
 """ Handy utilities for woot. """
-import re
-import pprint
 import functools
 import inspect
-from pydantic.dataclasses import Field
+import pprint
+import re
 
 
 def contains_bytes(data):
