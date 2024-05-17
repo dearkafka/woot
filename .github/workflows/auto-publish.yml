@@ -16,3 +16,4 @@ jobs:
       with:
         gh-token: ${{ secrets.GITHUB_TOKEN }}
         parse-changelog: true
+        pkg-name: woot
