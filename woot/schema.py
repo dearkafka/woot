@@ -1,4 +1,4 @@
-""" Schema for the action request body. Woot, woot. """
+"""Schema for the action request body. Woot, woot."""
 
 from __future__ import annotations
 
@@ -457,8 +457,7 @@ class Payload:
 
 @dataclass
 class ConversationStatusToggle:
-    meta: Optional[Dict[str, Any]] = None
-    payload: Optional[Payload] = None
+    status: Status
 
 
 @dataclass

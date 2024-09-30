@@ -1,9 +1,7 @@
-""" All actions for resources are defined here. """
+"""All actions for resources are defined here."""
 
-from typing import Any, Optional, Union, Type
 from dataclasses import dataclass, field
-from typing import Callable
-
+from typing import Any, Callable, Optional, Type, Union
 
 import woot.schema as ws
 
@@ -357,6 +355,7 @@ class ConversationsActions:
         default_factory=lambda: action_factory(
             method="POST",
             url="api/v1/accounts/{account_id}/conversations/{conversation_id}/toggle_status",
+            schema_=ws.ConversationStatusToggle,
         )
     )
 
